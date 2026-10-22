@@ -4,7 +4,11 @@ import os
 import json
 import csv
 import io
-import pandas as pd
+
+try:
+    import pandas as pd
+except ImportError:
+    pd = None
 
 from backend.app.core.database import get_db
 from backend.app.core.config import settings
@@ -29,28 +33,55 @@ def get_dataset_summary():
             summary["dictionary"] = json.load(f)
 
     if os.path.exists(sts_clean_path):
-        sts_df = pd.read_csv(sts_clean_path)
-        summary["sts_stats"] = {
-            "total_records": len(sts_df),
-            "class_distribution": sts_df["target"].value_counts().to_dict(),
-            "numerical_summary": {
-                col: {
-                    "mean": round(float(sts_df[col].mean()), 2),
-                    "std": round(float(sts_df[col].std()), 2),
-                    "min": round(float(sts_df[col].min()), 2),
-                    "max": round(float(sts_df[col].max()), 2)
+        if pd is not None:
+            sts_df = pd.read_csv(sts_clean_path)
+            summary["sts_stats"] = {
+                "total_records": len(sts_df),
+                "class_distribution": sts_df["target"].value_counts().to_dict(),
+                "numerical_summary": {
+                    col: {
+                        "mean": round(float(sts_df[col].mean()), 2),
+                        "std": round(float(sts_df[col].std()), 2),
+                        "min": round(float(sts_df[col].min()), 2),
+                        "max": round(float(sts_df[col].max()), 2)
+                    }
+                    for col in ["AGE", "TSH", "FT3", "FT4", "Anti tpo", "bmi", "SYS", "DIA"]
+                    if col in sts_df.columns and pd.api.types.is_numeric_dtype(sts_df[col])
                 }
-                for col in ["AGE", "TSH", "FT3", "FT4", "Anti tpo", "bmi", "SYS", "DIA"]
-                if col in sts_df.columns and pd.api.types.is_numeric_dtype(sts_df[col])
             }
-        }
+        else:
+            with open(sts_clean_path, "r", encoding="utf-8") as f:
+                reader = list(csv.DictReader(f))
+                classes = {}
+                for r in reader:
+                    t = r.get("target")
+                    if t:
+                        classes[t] = classes.get(t, 0) + 1
+                summary["sts_stats"] = {
+                    "total_records": len(reader),
+                    "class_distribution": classes,
+                    "numerical_summary": {}
+                }
 
     if os.path.exists(uci_train_path):
-        uci_df = pd.read_csv(uci_train_path)
-        summary["uci_stats"] = {
-            "train_records": len(uci_df),
-            "class_distribution": uci_df["target"].value_counts().to_dict(),
-        }
+        if pd is not None:
+            uci_df = pd.read_csv(uci_train_path)
+            summary["uci_stats"] = {
+                "train_records": len(uci_df),
+                "class_distribution": uci_df["target"].value_counts().to_dict(),
+            }
+        else:
+            with open(uci_train_path, "r", encoding="utf-8") as f:
+                reader = list(csv.DictReader(f))
+                classes = {}
+                for r in reader:
+                    t = r.get("target")
+                    if t:
+                        classes[t] = classes.get(t, 0) + 1
+                summary["uci_stats"] = {
+                    "train_records": len(reader),
+                    "class_distribution": classes,
+                }
 
     return summary
 
@@ -65,32 +96,45 @@ def export_research_records(
     output = io.StringIO()
     writer = csv.writer(output)
 
-    # Header
     header = [
         "Record_ID",
-        "Participant_Code" if anonymize else "Participant_Identifier",
+        "Participant_Code" if not anonymize else "Deidentified_Participant_ID",
+        "Prediction_Timestamp",
         "Model_Name",
         "Model_Version",
         "Predicted_Class",
-        "Timestamp"
+        "Confidence_Score",
+        "Key_Explanations",
+        "Submitted_Features_JSON"
     ]
-    # Sample feature keys from submitted_feature_values
     writer.writerow(header)
 
     for p in predictions:
-        row = [
+        probs = p.class_probabilities or {}
+        confidence = probs.get(p.predicted_class, 1.0)
+        rules_text = " | ".join(p.explanation_rules or [])
+        features_json = json.dumps(p.submitted_feature_values or {})
+
+        p_code = p.participant.research_participant_code if p.participant else "UNKNOWN"
+        if anonymize:
+            p_code = f"ANON-{str(p.participant_id)[:8].upper()}"
+
+        writer.writerow([
             p.id,
-            p.participant.research_participant_code if anonymize else (p.participant.display_name or p.participant.research_participant_code),
+            p_code,
+            p.prediction_timestamp.isoformat(),
             p.model_name,
             p.model_version,
             p.predicted_class,
-            p.prediction_timestamp.isoformat()
-        ]
-        writer.writerow(row)
+            f"{confidence:.4f}",
+            rules_text,
+            features_json
+        ])
 
     output.seek(0)
+    filename = f"thyropredict_export_{'anonymized' if anonymize else 'full'}.csv"
     return Response(
         content=output.getvalue(),
         media_type="text/csv",
-        headers={"Content-Disposition": "attachment; filename=thyropredict_research_records.csv"}
+        headers={"Content-Disposition": f"attachment; filename={filename}"}
     )
