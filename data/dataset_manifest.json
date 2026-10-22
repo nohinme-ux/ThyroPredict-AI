@@ -1,0 +1,52 @@
+{
+  "datasets": [
+    {
+      "filename": "dataset_dictionary.json",
+      "size_bytes": 8954,
+      "md5": "745f5440a97c5cba8e07a89c0b246f15",
+      "sha256": "c44040a5a78fd2103e089d9689d49844003a70d2f985cf05530dfcdef8d41195"
+    },
+    {
+      "filename": "sts thyroid data.xlsx",
+      "size_bytes": 179067,
+      "md5": "3b91ea9126444dbba0b7ea2bab2a6e9b",
+      "sha256": "0ab5124022bc937a9eaaa1d9c49ed2d18e429f6fd3eb5b8225b72c662346726d"
+    },
+    {
+      "filename": "sts_cleaned.csv",
+      "size_bytes": 76340,
+      "md5": "e32130a754e0caeeafe1e259ba6c823b",
+      "sha256": "12e69005efe207bc00e09957653b8e29fe0184ca3e78d8bf7dc08691e895f3ca"
+    },
+    {
+      "filename": "uci_allhypo.data",
+      "size_bytes": 246039,
+      "md5": "d050f2922f9b08741492562d1bb6e7d7",
+      "sha256": "16d273422c341427cf9decddf50474aac6ba8e53fd056bcfe360d3d580473f87"
+    },
+    {
+      "filename": "uci_allhypo.names",
+      "size_bytes": 934,
+      "md5": "0ca09f647bbd998028a6084fb7f0ed56",
+      "sha256": "3b7c609a7ab312ff0568dc30d65f5b166463ebbada9862069559bb31c5ca7ba3"
+    },
+    {
+      "filename": "uci_allhypo.test",
+      "size_bytes": 85433,
+      "md5": "538f1cdcd63b0adbfe7464e39a68af18",
+      "sha256": "ed415ad2e13b44b70d07b22dadfb398ba72ffb9faaefce8ff6e2681ca04112dd"
+    },
+    {
+      "filename": "uci_test.csv",
+      "size_bytes": 80206,
+      "md5": "7453b360154bff86cc0e963dcb07df3d",
+      "sha256": "3b91823e9edf7430a3ba522521a72f64e35c7c06e7014e67430e01d830516dd3"
+    },
+    {
+      "filename": "uci_train.csv",
+      "size_bytes": 230367,
+      "md5": "cd97b03911be522b6f802babec17daf0",
+      "sha256": "ba3d8b9d2314a0224c164122ccdc80dc996ca476a057306b47f5ddcc40ad4155"
+    }
+  ]
+}

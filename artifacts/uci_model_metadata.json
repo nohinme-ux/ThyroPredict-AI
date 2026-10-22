@@ -1,0 +1,165 @@
+{
+  "model_id": "uci_benchmark_decision_tree",
+  "version": "1.0.0",
+  "algorithm": "DecisionTreeClassifier (scikit-learn)",
+  "training_timestamp": "2026-10-22T04:12:32.837515+00:00",
+  "dataset": {
+    "name": "UCI Thyroid Disease Benchmark Dataset (allhypo)",
+    "source": "UCI Machine Learning Repository / Garavan Institute",
+    "fingerprint_md5": "cd97b03911be522b6f802babec17daf0",
+    "train_samples": 2798,
+    "test_samples": 972,
+    "split_strategy": "Official UCI independent test partition (allhypo.test)"
+  },
+  "hyperparameters": {
+    "criterion": "gini",
+    "max_depth": 6,
+    "min_samples_split": 8,
+    "min_samples_leaf": 4,
+    "class_weight": "balanced",
+    "random_state": 42
+  },
+  "features": {
+    "numeric": [
+      "age",
+      "TSH",
+      "T3",
+      "TT4",
+      "T4U",
+      "FTI"
+    ],
+    "boolean": [
+      "on_thyroxine",
+      "query_on_thyroxine",
+      "on_antithyroid_medication",
+      "sick",
+      "pregnant",
+      "thyroid_surgery",
+      "I131_treatment",
+      "query_hypothyroid",
+      "query_hyperthyroid",
+      "lithium",
+      "goitre",
+      "tumor",
+      "hypopituitary",
+      "psych"
+    ],
+    "categorical": [
+      "sex"
+    ],
+    "all_transformed": [
+      "age",
+      "TSH",
+      "T3",
+      "TT4",
+      "T4U",
+      "FTI",
+      "on_thyroxine",
+      "query_on_thyroxine",
+      "on_antithyroid_medication",
+      "sick",
+      "pregnant",
+      "thyroid_surgery",
+      "I131_treatment",
+      "query_hypothyroid",
+      "query_hyperthyroid",
+      "lithium",
+      "goitre",
+      "tumor",
+      "hypopituitary",
+      "psych",
+      "sex_M"
+    ]
+  },
+  "classes": [
+    "compensated hypothyroid",
+    "negative",
+    "primary hypothyroid"
+  ],
+  "metrics": {
+    "accuracy": 0.9907,
+    "balanced_accuracy": 0.9807,
+    "macro_f1": 0.9504,
+    "weighted_f1": 0.991,
+    "confusion_matrix": {
+      "labels": [
+        "compensated hypothyroid",
+        "negative",
+        "primary hypothyroid"
+      ],
+      "matrix": [
+        [
+          38,
+          0,
+          2
+        ],
+        [
+          5,
+          894,
+          2
+        ],
+        [
+          0,
+          0,
+          31
+        ]
+      ]
+    },
+    "per_class": {
+      "compensated hypothyroid": {
+        "precision": 0.8837,
+        "recall": 0.95,
+        "f1_score": 0.9157,
+        "support": 40
+      },
+      "negative": {
+        "precision": 1.0,
+        "recall": 0.9922,
+        "f1_score": 0.9961,
+        "support": 901
+      },
+      "primary hypothyroid": {
+        "precision": 0.8857,
+        "recall": 1.0,
+        "f1_score": 0.9394,
+        "support": 31
+      }
+    }
+  },
+  "feature_importances": [
+    {
+      "feature": "TSH",
+      "importance": 0.502
+    },
+    {
+      "feature": "FTI",
+      "importance": 0.4254
+    },
+    {
+      "feature": "TT4",
+      "importance": 0.0358
+    },
+    {
+      "feature": "age",
+      "importance": 0.0205
+    },
+    {
+      "feature": "on_thyroxine",
+      "importance": 0.0135
+    },
+    {
+      "feature": "thyroid_surgery",
+      "importance": 0.0028
+    }
+  ],
+  "tree_structure": {
+    "depth": 6,
+    "n_leaves": 10,
+    "rules_text": "|--- TSH <= 6.05\n|   |--- class: negative\n|--- TSH >  6.05\n|   |--- FTI <= 64.50\n|   |   |--- thyroid_surgery <= 0.50\n|   |   |   |--- T3 <= 2.25\n|   |   |   |   |--- class: primary hypothyroid\n|   |   |   |--- T3 >  2.25\n|   |   |   |   |--- class: primary hypothyroid\n|   |   |--- thyroid_surgery >  0.50\n|   |   |   |--- class: primary hypothyroid\n|   |--- FTI >  64.50\n|   |   |--- TT4 <= 59.00\n|   |   |   |--- class: primary hypothyroid\n|   |   |--- TT4 >  59.00\n|   |   |   |--- age <= 6.00\n|   |   |   |   |--- class: primary hypothyroid\n|   |   |   |--- age >  6.00\n|   |   |   |   |--- on_thyroxine <= 0.50\n|   |   |   |   |   |--- thyroid_surgery <= 0.50\n|   |   |   |   |   |   |--- class: compensated hypothyroid\n|   |   |   |   |   |--- thyroid_surgery >  0.50\n|   |   |   |   |   |   |--- class: negative\n|   |   |   |   |--- on_thyroxine >  0.50\n|   |   |   |   |   |--- sex_M <= 0.50\n|   |   |   |   |   |   |--- class: negative\n|   |   |   |   |   |--- sex_M >  0.50\n|   |   |   |   |   |   |--- class: negative\n"
+  },
+  "limitations": [
+    "Historical Garavan Institute dataset collected in 1987.",
+    "Model predictions serve solely as an experimental research tool.",
+    "High test accuracy on negative class reflects pronounced class imbalance typical of general screening cohorts."
+  ]
+}

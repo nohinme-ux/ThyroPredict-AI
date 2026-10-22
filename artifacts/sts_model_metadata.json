@@ -1,0 +1,172 @@
+{
+  "model_id": "sts_clinical_decision_tree",
+  "version": "1.0.0",
+  "algorithm": "DecisionTreeClassifier (scikit-learn)",
+  "training_timestamp": "2026-10-22T04:12:08.093870+00:00",
+  "dataset": {
+    "name": "STS Clinical Thyroid Study Dataset",
+    "file": "sts thyroid data.xlsx",
+    "fingerprint_md5": "e32130a754e0caeeafe1e259ba6c823b",
+    "total_samples": 269,
+    "train_samples": 215,
+    "test_samples": 54,
+    "split_strategy": "Stratified 80/20 train/test split (random_state=42)"
+  },
+  "hyperparameters": {
+    "criterion": "gini",
+    "max_depth": 5,
+    "min_samples_split": 6,
+    "min_samples_leaf": 3,
+    "class_weight": "balanced",
+    "random_state": 42
+  },
+  "features": {
+    "numeric": [
+      "AGE",
+      "DURATION",
+      "HGT",
+      "WGT",
+      "bmi",
+      "SYS",
+      "DIA",
+      "FBS",
+      "FT3",
+      "FT4",
+      "TSH",
+      "Anti tpo",
+      "Visfatin",
+      "Thyroglobulin",
+      "IL6",
+      "TCHOL",
+      "TGL",
+      "HDL",
+      "LDL",
+      "HB",
+      "WBC",
+      "PLT"
+    ],
+    "categorical": [
+      "SEX"
+    ],
+    "all_transformed": [
+      "AGE",
+      "DURATION",
+      "HGT",
+      "WGT",
+      "bmi",
+      "SYS",
+      "DIA",
+      "FBS",
+      "FT3",
+      "FT4",
+      "TSH",
+      "Anti tpo",
+      "Visfatin",
+      "Thyroglobulin",
+      "IL6",
+      "TCHOL",
+      "TGL",
+      "HDL",
+      "LDL",
+      "HB",
+      "WBC",
+      "PLT",
+      "SEX_M"
+    ]
+  },
+  "classes": [
+    "Autoimmune Thyroid Disease",
+    "Euthyroid / Normal",
+    "Hyperthyroid",
+    "Primary Hypothyroidism"
+  ],
+  "metrics": {
+    "accuracy": 0.9444,
+    "balanced_accuracy": 0.9487,
+    "macro_f1": 0.9198,
+    "weighted_f1": 0.9461,
+    "cross_val_macro_f1_mean": 1.0,
+    "cross_val_macro_f1_std": 0.0,
+    "confusion_matrix": {
+      "labels": [
+        "Autoimmune Thyroid Disease",
+        "Euthyroid / Normal",
+        "Hyperthyroid",
+        "Primary Hypothyroidism"
+      ],
+      "matrix": [
+        [
+          10,
+          0,
+          1,
+          1
+        ],
+        [
+          0,
+          25,
+          1,
+          0
+        ],
+        [
+          0,
+          0,
+          5,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          11
+        ]
+      ]
+    },
+    "per_class": {
+      "Autoimmune Thyroid Disease": {
+        "precision": 1.0,
+        "recall": 0.8333,
+        "f1_score": 0.9091,
+        "support": 12
+      },
+      "Euthyroid / Normal": {
+        "precision": 1.0,
+        "recall": 0.9615,
+        "f1_score": 0.9804,
+        "support": 26
+      },
+      "Hyperthyroid": {
+        "precision": 0.7143,
+        "recall": 1.0,
+        "f1_score": 0.8333,
+        "support": 5
+      },
+      "Primary Hypothyroidism": {
+        "precision": 0.9167,
+        "recall": 1.0,
+        "f1_score": 0.9565,
+        "support": 11
+      }
+    }
+  },
+  "feature_importances": [
+    {
+      "feature": "TSH",
+      "importance": 0.6667
+    },
+    {
+      "feature": "Anti tpo",
+      "importance": 0.3333
+    }
+  ],
+  "tree_structure": {
+    "depth": 4,
+    "n_leaves": 5,
+    "rules_text": "|--- Anti tpo <= 37.50\n|   |--- TSH <= 0.58\n|   |   |--- class: Hyperthyroid\n|   |--- TSH >  0.58\n|   |   |--- TSH <= 5.16\n|   |   |   |--- TSH <= 0.93\n|   |   |   |   |--- class: Euthyroid / Normal\n|   |   |   |--- TSH >  0.93\n|   |   |   |   |--- class: Euthyroid / Normal\n|   |   |--- TSH >  5.16\n|   |   |   |--- class: Primary Hypothyroidism\n|--- Anti tpo >  37.50\n|   |--- class: Autoimmune Thyroid Disease\n"
+  },
+  "limitations": [
+    "Trained on an observational clinical cohort of 269 subjects.",
+    "Model outputs are research classifications and not confirmed clinical diagnoses.",
+    "Anti-TPO is the primary discriminator for autoimmune etiology; laboratory variations in assay calibration may affect predictive thresholds.",
+    "Rare clinical presentations or complex dual pathologies require full physician evaluation."
+  ]
+}

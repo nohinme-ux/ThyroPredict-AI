@@ -1,0 +1,61 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Node
+node_modules/
+frontend/node_modules/
+frontend/dist/
+frontend/.vite/
+
+# Database & Environment
+*.db
+*.sqlite
+*.sqlite3
+.env
+.env.local
+.env.*.local
+*.pem
+*.key
+
+# Virtual Environments
+.venv/
+env/
+venv/
+ENV/
+
+# Raw Clinical Datasets (PHI / Non-anonymized spreadsheets)
+*.xlsx
+data/*.xlsx
+*.xls
+
+# Logs & Scratch
+*.log
+scratch/
+
+# IDE
+.vscode/
+.idea/
+*.swp
