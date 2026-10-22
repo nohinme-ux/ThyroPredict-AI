@@ -10,10 +10,13 @@ from backend.app.models.models import User, ResearchParticipant, Prediction
 from backend.app.services.ml_service import ml_service
 from backend.app.api import auth, participants, predictions, model, dataset
 
-# Create tables
-Base.metadata.create_all(bind=engine)
-
 def seed_initial_data():
+    try:
+        Base.metadata.create_all(bind=engine)
+    except Exception as e:
+        print(f"[Startup Warning] Could not auto-create database tables: {e}")
+        return
+
     db = SessionLocal()
     try:
         # Seed researcher account if not exists

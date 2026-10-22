@@ -1,4 +1,5 @@
 import os
+import tempfile
 from pydantic import BaseModel
 
 class Settings(BaseModel):
@@ -14,12 +15,16 @@ class Settings(BaseModel):
     ARTIFACTS_DIR: str = os.getenv("ARTIFACTS_DIR", os.path.join(BASE_DIR, "artifacts"))
     DATA_DIR: str = os.getenv("DATA_DIR", os.path.join(BASE_DIR, "data"))
     
-    # Database (anchored to BASE_DIR unless DATABASE_URL is explicitly set)
-    DATABASE_URL: str = os.getenv("DATABASE_URL", f"sqlite:///{os.path.join(BASE_DIR, 'thyropredict.db')}")
+    # Database (anchored to BASE_DIR, temp dir on Vercel/serverless, or cloud PostgreSQL)
+    DATABASE_URL: str = (
+        os.getenv("POSTGRES_URL") or
+        os.getenv("DATABASE_URL") or
+        (f"sqlite:///{os.path.join(tempfile.gettempdir(), 'thyropredict.db')}" if os.getenv("VERCEL") == "1" else f"sqlite:///{os.path.join(BASE_DIR, 'thyropredict.db')}")
+    )
 
     def __init__(self, **data):
         super().__init__(**data)
-        # Normalize cloud PostgreSQL URLs (e.g. Render / Supabase / Neon using postgres://)
+        # Normalize cloud PostgreSQL URLs (e.g. Render / Supabase / Neon / Vercel using postgres://)
         if self.DATABASE_URL.startswith("postgres://"):
             self.DATABASE_URL = self.DATABASE_URL.replace("postgres://", "postgresql://", 1)
 
